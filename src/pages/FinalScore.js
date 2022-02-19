@@ -25,7 +25,7 @@ const FinalScore = () => {
                     variant="outlined"
                     onClick={handleBackSettings}
                 >
-                    Back to settings!
+                    Back to the start!
                 </Button>
             </Container>
         </Container>

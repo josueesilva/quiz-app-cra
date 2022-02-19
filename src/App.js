@@ -9,6 +9,7 @@ import FinalScore from './pages/FinalScore';
 import ContainerWrapper from './components/ContainerWrapper'
 import Header from './components/Header'
 import Container from './components/Container'
+import { GlobalStyle } from './globalStyles';
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
             <Route exact path="/questions" element={<Questions />} />
             <Route exact path="/score" element={<FinalScore />} />
           </Routes>
-        </Container>       
+        </Container>  
+        <GlobalStyle />     
       </ContainerWrapper>
     </Router>
   );

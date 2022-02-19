@@ -7,19 +7,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { decode } from 'html-entities'
 import {
-    handleScoreChange
+    handleScoreChange,
+    handleUserChange
 } from '../redux/actions'
 import LabelField from '../components/LabelField'
 import Container from '../components/Container'
+import { Modal } from '../components/Modal'
 const getRandomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max))
 }
-const Questions = () => {
+const Questions = () => {    
+    const [showModal, setShowModal] = useState(false)
+    const openModal =  () => {
+        setShowModal(prev => !prev)
+    }
     const {
-        question_category,
-        question_difficulty,
-        question_type,
-        amount_of_question,
+        user_name,
         score
     } = useSelector(state => state);
     const navigate = useNavigate();
@@ -52,28 +55,48 @@ const Questions = () => {
         )
     }
 
+    const handleClickRestart = () => {
+        dispatch(handleUserChange(''))
+        navigate('/')
+    }
 
-    const handleClickAnswer = (e) => {
-        const question = response.results[questionIndex];
-        if (e.target.textContent === decode(question.correct_answer)) {
-            dispatch(handleScoreChange(score + 1))
-            setQuestionIndex(questionIndex + 1)
-        }
+    const handleClickContinue = () => {
+        setShowModal(false);
+        next();
+    }
+
+    const next = () => {
         if (questionIndex + 1 < response.results.length) {
             setQuestionIndex(questionIndex + 1)
         } else {
             navigate('/score')
         }
     }
+
+    const handleClickAnswer = (e) => {
+        const question = response.results[questionIndex];
+        if (e.target.textContent === decode(question.correct_answer)) {
+            dispatch(handleScoreChange(score + 1))
+            next();
+        }
+        else{
+            openModal()
+        }
+    }
     
     return (
+        <>
         <Container direction="column">
+            <Container direction="column" >
+                Good luck {user_name ? user_name :  'no name'}
+            </Container>
             <Container direction="column">
                 <Header>Question {questionIndex + 1}</ Header>
                 <LabelField>
                     {decode(response.results[questionIndex].question)}
                 </LabelField>
             </Container>        
+               
             <Container direction="column">            
                 <Container  direction="column">
                     {options.map((a, id) => (
@@ -90,8 +113,22 @@ const Questions = () => {
                 <Container>
                     Score: {score} / 10
                 </Container>
-            </Container>
+            </Container>            
         </Container>
+        <Modal showModal={showModal} setShowModal={setShowModal}>
+            Wrong answer!
+            Do you wanna continue?
+            <Container>
+                <Button onClick={handleClickRestart}>
+                    Restart
+                </Button>
+                
+                <Button onClick={handleClickContinue}>
+                    Continue        
+                </Button>
+            </Container>
+        </Modal>
+        </>
     );
 }
  
