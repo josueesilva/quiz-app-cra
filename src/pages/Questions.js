@@ -1,6 +1,6 @@
 
-import { Typography, Button, CircularProgress } from '@mui/material'
-import { Box } from '@mui/system'
+import Header from '../components/Header'
+import Button from '../components/Button'
 import { useNavigate } from 'react-router-dom'
 import useAxios from '../hooks/useAxios'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,6 +9,8 @@ import { decode } from 'html-entities'
 import {
     handleScoreChange
 } from '../redux/actions'
+import LabelField from '../components/LabelField'
+import Container from '../components/Container'
 const getRandomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max))
 }
@@ -23,16 +25,7 @@ const Questions = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    let apiUrl = `api.php?amount=${amount_of_question}`
-    if (question_category) {
-        apiUrl = apiUrl.concat(`&category=${question_category}`)
-    }
-    if (question_difficulty) {
-        apiUrl = apiUrl.concat(`&difficulty=${question_difficulty}`)
-    }
-    if (question_type) {
-        apiUrl = apiUrl.concat(`&type=${question_type}`)
-    }
+    let apiUrl = 'api.php?amount=10&category=9&difficulty=easy&type=multiple'
 
     const { response, loading }  = useAxios({ url: apiUrl })
     const [questionIndex, setQuestionIndex]  = useState(0)
@@ -51,13 +44,14 @@ const Questions = () => {
         }
     }, [response, questionIndex])
 
-    if (loading) {
+    
+
+    if(loading){
         return (
-            <Box mt={20}>
-                <CircularProgress />
-            </Box>
+            <Container>Loading...</Container>
         )
     }
+
 
     const handleClickAnswer = (e) => {
         const question = response.results[questionIndex];
@@ -65,7 +59,7 @@ const Questions = () => {
             dispatch(handleScoreChange(score + 1))
             setQuestionIndex(questionIndex + 1)
         }
-        if (questionIndex + 2 < response.results.length) {
+        if (questionIndex + 1 < response.results.length) {
             setQuestionIndex(questionIndex + 1)
         } else {
             navigate('/score')
@@ -73,27 +67,31 @@ const Questions = () => {
     }
     
     return (
-        <Box>
-            <Typography variant="h4">Question {questionIndex + 1}</Typography>
-            <Typography mt={5}>
-                {decode(response.results[questionIndex].question)}
-            </Typography>
-            {options.map((a, id) => (
-                <Box mt={2} key={id}>
-                    <Button
-                        onClick={handleClickAnswer}
-                        variant="contained"
-                    >
-                        {decode(a)}
-                    </Button>
-                </Box>
-            ))}
-            <Box mt={5}>
-                <Button>
-                    Score: {score} / {amount_of_question}
-                </Button>
-            </Box>
-        </Box>
+        <Container direction="column">
+            <Container direction="column">
+                <Header>Question {questionIndex + 1}</ Header>
+                <LabelField>
+                    {decode(response.results[questionIndex].question)}
+                </LabelField>
+            </Container>        
+            <Container direction="column">            
+                <Container  direction="column">
+                    {options.map((a, id) => (
+                        <Container key={id}>
+                            <Button
+                                onClick={handleClickAnswer}
+                                variant="contained"
+                            >
+                                {decode(a)}
+                            </Button>
+                        </Container>
+                    ))}
+                </Container>
+                <Container>
+                    Score: {score} / 10
+                </Container>
+            </Container>
+        </Container>
     );
 }
  

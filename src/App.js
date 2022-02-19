@@ -3,27 +3,30 @@ import {
   Routes,
   Route
 } from 'react-router-dom'
-import { Box } from '@mui/system';
-import Settings from './pages/Settings';
+import Start from './pages/Start';
 import Questions from './pages/Questions';
 import FinalScore from './pages/FinalScore';
-import { Container, Typography } from '@mui/material';
+import ContainerWrapper from './components/ContainerWrapper'
+import Header from './components/Header'
+import Container from './components/Container'
 
 function App() {
   return (
     <Router>
-      <Container maxWidth="sm"> 
-        <Box textAlign="center" mt={5}>
-          <Typography variant="h2" fontWeight="bold">
+      <ContainerWrapper maxWidth="sm"> 
+        <Container>
+          <Header>
             Quiz App
-          </Typography>
+          </Header>
+        </Container>  
+        <Container>
           <Routes>
-            <Route exact path="/" element={<Settings/>} />
+            <Route exact path="/" element={<Start />} />
             <Route exact path="/questions" element={<Questions />} />
             <Route exact path="/score" element={<FinalScore />} />
           </Routes>
-        </Box>       
-      </Container>
+        </Container>       
+      </ContainerWrapper>
     </Router>
   );
 }

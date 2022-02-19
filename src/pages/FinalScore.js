@@ -1,8 +1,9 @@
-import { Typography, Button } from '@mui/material';
-import {Box} from '@mui/system'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleAmountChange, handleScoreChange } from '../redux/actions';
+import { handleScoreChange } from '../redux/actions';
+import Header from '../components/Header';
+import Button from '../components/Button';
+import Container from '../components/Container';
 
 const FinalScore = () => {
     const {score } = useSelector(state => state)
@@ -10,25 +11,24 @@ const FinalScore = () => {
     const dispatch = useDispatch()
     const handleBackSettings = () => {
         dispatch(handleScoreChange(0))
-        dispatch(handleAmountChange(0))
         navigate('/')
     }
     return (
-        <Box mt={30}>
-            <Typography
-                variant="h3"
-                fontWeight="bold"
-                mb={3}
-            >
-                Final Socre {score}
-            </Typography>
-            <Button
-                variant="outlined"
-                onClick={handleBackSettings}
-            >
-                Back to settings!
-            </Button>
-        </Box>
+        <Container direction="column">
+            <Container>
+                <Header>
+                    Final Socre {score}
+                </Header>
+            </Container>
+            <Container>
+                <Button
+                    variant="outlined"
+                    onClick={handleBackSettings}
+                >
+                    Back to settings!
+                </Button>
+            </Container>
+        </Container>
     );
 }
  
